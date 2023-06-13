@@ -1,9 +1,7 @@
-> :warning: **This doesn't work yet**: I don't have a RM520N in one of these adapters yet, and it doesn't work yet. LOL.
-
 # quectel-rgmii-at-command-client
 This is a Python script to send AT commands to Quectel RM5xx modems that are connected via a RGMII Ethernet interface (aka a "RJ45 to M.2" or "Ethernet to M.2" adapter board). Their AT interface doesn't just accept plain AT commands, so this is trying to reimplement the protocol they give a (poor) example of in the reference C app.
 
-Should work with any RM520/RM530 modems. Does not appear to work with RM500Q-GL, firmware RM500QGLABR13A02M4G. That modem opens the port, but doesn't seem to respond to anything. I have heard that it will work with RM502Q-AE's at least.
+Should work with any RM520/RM530 modems. Also _sometimes_ works with my RM500Q.
 
 *VERY* little error checking; if something breaks, you can keep both pieces.
 
