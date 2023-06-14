@@ -4,7 +4,33 @@ import errno
 from errno import EAGAIN, EWOULDBLOCK, EINPROGRESS, EINTR
 import argparse
 
+"""
+Client for Quectel's QETH ETH_AT port on modems acting as a PCIe master with an ethernet port
 
+This is a modified version of a direct ChatGPT port of RGMII_AT_Client.c to python. If the socket
+communication can be simplified that would be awesome!
+
+Basic packet format, both sending and receiving:
+[identifier byte][two bytes for length][content][\r\n]
+
+For sending packets, it appears the identifier byte needs to be 0xa4.
+
+When receiving packets, it appears that the modem sends:
+0xe0 with the RGMII_ATC_READY packet
+0xa0 with the actual command output (both printing the command again, and the response.)
+
+The --debug flag will print the parsing of the packets along with the contents.. IE:
+
+    ====================================> recv all: 113
+    ==> length= 110  head=0xa0
+
+    +QENG: "servingcell","NOCONN","NR5G-SA","FDD",313,340,03865B04C,583,5B01,401050,70,4,-110,-14,11,0,-
+
+    OK
+
+The total length is 113 including the three header bytes, the length bytes are 110, and the initial byte is 0xa0.
+
+"""
 
 BUFFER_SIZE = 2048 * 4
 
@@ -48,7 +74,7 @@ def main(args):
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    client_socket.bind(("", 0))
+    #client_socket.bind(("", 0))
 
     server_addr = (SERVER_IP, SERVER_PORT)
 
@@ -100,12 +126,8 @@ def main(args):
                         if DEBUG:
                             print("\n\n====================================> recv all:", len(datap))
                             print("==> length=", length, " head=0x%02x" % datap[0])
-                        #print("\"" + buffer_temp[:length].decode() + "\"")
+                        
                         print(buffer_temp[:length].decode())
-                        # for i in range(length):
-                        #     # print("0x%02x " % buffer_temp[i], end="")
-                        #     pass
-                        #print()
 
                     rv = rv[length+3:]
                     if len(rv) > 0:
@@ -131,7 +153,8 @@ def main(args):
         time.sleep(10 / 1000)
 
         # This is kind of a lame way to do it. Just iterates X times then bombs.
-        if count == 300:
+        # TODO: Watch how long it's been since the last response, and kill it more quickly.
+        if count == 500:
             break
 
     print()
