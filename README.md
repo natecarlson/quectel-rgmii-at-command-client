@@ -5,6 +5,9 @@ Should work with any RM520/RM530 modems. Also _sometimes_ works with my RM500Q.
 
 *VERY* little error checking; if something breaks, you can keep both pieces.
 
+If you're interested in more general documentation on these ethernet sleds, I've posted some at:
+https://github.com/natecarlson/quectel-rgmii-configuration-notes
+
 ## Requirements:
 Your modem should be installed in an M.2-to-ethernet sled, and the modem should already be configured through the USB port, and working properly. You will then need to enable the AT port:
 
