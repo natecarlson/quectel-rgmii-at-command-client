@@ -8,6 +8,10 @@ Should work with any RM520/RM530 modems. Also _sometimes_ works with my RM500Q.
 If you're interested in more general documentation on these ethernet sleds, I've posted some at:
 https://github.com/natecarlson/quectel-rgmii-configuration-notes
 
+If you would like to support my work to provide public resources for these Quectel modems, and help me purchase additional hardware for more hacking (without having to take one of my active modems down), you can click the link below. To be clear, please only do this if you actually want to; any future work I do will always be publicly available, and I'm not going to gate anything behind this! Well, unless you want remote support to set something up, I suppose.
+
+<a href="https://www.buymeacoffee.com/natecarlson" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ## Requirements:
 Your modem should be installed in an M.2-to-ethernet sled, and the modem should already be configured through the USB port, and working properly. You will then need to enable the AT port:
 

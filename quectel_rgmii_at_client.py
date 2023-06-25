@@ -156,7 +156,7 @@ def main(args):
 
         # This is kind of a lame way to do it. Just iterates X times then bombs.
         # TODO: Watch how long it's been since the last response, and kill it more quickly.
-        if count == 500:
+        if count == 1000:
             break
 
     print()
