@@ -13,6 +13,8 @@ If you're interested in supporting more work on things like this:
 * Supports multiple clients connected via telnet at the same time. They will all see the same data. Commands entered by the clients are send in the order they are received; there _shouldn't_ be any problems with commands getting garbled by multiple inputs. (The intent of this is to allow other scripts to connect via TCP and inject commands into the modem.. for example, a connection stats monitoring script.)
 * Relatively lightweight; uses the Unix port of Micropython, which is remarkably small. Having Micropython available on the modem also opens up many other opportunities; however, be aware that it isn't at parity with CPython, and that it needs different modules (ie, you can't just use pip.)
 
+https://github.com/natecarlson/quectel-rgmii-at-command-client/assets/502200/026b97fa-7f5e-40c0-a7ba-41226234b470
+
 ## Known issues
 
 * This currently listens on port 5000 on all interfaces. If you're not behind CGNAT, this is a big risk!
