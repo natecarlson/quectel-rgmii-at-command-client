@@ -1,0 +1,14 @@
+[Unit]
+Description=Telnet daemon for AT command
+After=socat-smd11.service
+PartOf=socat-smd11.service
+Requires=socat-smd11-from-ttyIN.service
+Requires=socat-smd11-to-ttyIN.service
+
+[Service]
+ExecStart=/usrdata/at-telnet/modem-multiclient.py
+Restart=always
+RestartSec=1
+
+[Install]
+WantedBy=multi-user.target

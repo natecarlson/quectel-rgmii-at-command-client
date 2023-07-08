@@ -1,0 +1,14 @@
+[Unit]
+Description=Read from /dev/smd11 and write to ttyIN
+After=socat-smd11.service
+PartOf=socat-smd11.service
+
+[Service]
+ExecStart=/bin/bash -c "/bin/cat /dev/smd11 > /dev/ttyIN"
+Restart=always
+RestartSec=1
+StandardInput=tty-force
+StandardOutput=tty-force
+
+[Install]
+WantedBy=multi-user.target
