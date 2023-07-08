@@ -1,4 +1,7 @@
 # quectel-rgmii-at-command-client
+
+**NOTE**: This is a work-in-progress that I never got fully working. You should probably use the [AT Telnet Daemon](https://github.com/natecarlson/quectel-rgmii-at-command-client/at_telnet_daemon) instead. It does require adb to install, but it provides a full telnet interface to the modem, and is much more reliable. I may continue to work on this at some point, but I'm not sure. Pull requests always welcome!
+
 This is a Python script to send AT commands to Quectel RM5xx modems that are connected via a RGMII Ethernet interface (aka a "RJ45 to M.2" or "Ethernet to M.2" adapter board). Their AT interface doesn't just accept plain AT commands, so this is trying to reimplement the protocol they give a (poor) example of in the reference C app.
 
 Should work with any RM520/RM530 modems. Also _sometimes_ works with my RM500Q.
@@ -12,13 +15,15 @@ If you would like to support my work to provide public resources for these Quect
 
 <a href="https://www.buymeacoffee.com/natecarlson" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
-## Requirements:
+## Requirements
+
 Your modem should be installed in an M.2-to-ethernet sled, and the modem should already be configured through the USB port, and working properly. You will then need to enable the AT port:
 
 * Use a terminal emulator to connect to the modem's USB port
 * Run `AT+QETH="eth_at","enable"` to enable the AT port
 
 ## Usage
+
 * Download the script
 * Run the script like: `python quectel_rgmii_at_client.py --modem-ip=192.168.225.1 --modem-port=1555 --at-command=ATI` (run --help to see defaults.)
 * It should print the output
