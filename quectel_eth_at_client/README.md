@@ -1,6 +1,6 @@
 # quectel-rgmii-at-command-client
 
-**NOTE**: This is a work-in-progress that I never got fully working. You should probably use the [AT Telnet Daemon](https://github.com/natecarlson/quectel-rgmii-at-command-client/at_telnet_daemon) instead. It does require adb to install, but it provides a full telnet interface to the modem, and is much more reliable. I may continue to work on this at some point, but I'm not sure. Pull requests always welcome!
+**NOTE**: This is a work-in-progress that I never got fully working. I prefer the [AT Telnet Daemon](https://github.com/natecarlson/quectel-rgmii-at-command-client/tree/main/at_telnet_daemon) instead. It does require adb to install, but it provides a full telnet interface to the modem, and is much more reliable. I may continue to work on this at some point, but I'm not sure. Pull requests always welcome!
 
 This is a Python script to send AT commands to Quectel RM5xx modems that are connected via a RGMII Ethernet interface (aka a "RJ45 to M.2" or "Ethernet to M.2" adapter board). Their AT interface doesn't just accept plain AT commands, so this is trying to reimplement the protocol they give a (poor) example of in the reference C app.
 
