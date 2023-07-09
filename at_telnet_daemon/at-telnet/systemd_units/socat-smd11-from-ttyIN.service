@@ -1,6 +1,7 @@
 [Unit]
 Description=Read from /dev/ttyIN and write to smd11
 Requires=socat-smd11.service
+After=socat-smd11.service
 
 [Service]
 ExecStart=/bin/bash -c "/bin/cat /dev/ttyIN > /dev/smd11"
