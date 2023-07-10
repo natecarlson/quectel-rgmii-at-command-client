@@ -1,6 +1,6 @@
 [Unit]
 Description=Read from /dev/smd11 and write to ttyIN
-Requires=socat-smd11.service
+BindsTo=socat-smd11.service
 After=socat-smd11.service
 
 [Service]
