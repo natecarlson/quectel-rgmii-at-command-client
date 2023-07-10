@@ -17,6 +17,8 @@ If you're interested in supporting more work on things like this:
 
 ## Known issues
 
+* **This currently only works with RM520 modems!** My build environment targeted the library versions of the RM520; the other modems have an older environment. I'll rebuild on an older base version soonish.
+* If your telnet client sends each character individually (instead of waiting for you to press enter), this won't work properly. I'll get a patch in for it soonish. I've confirmed that with default settings putty, netcat, and NetKit telnet all work fine. (I'll always recommend using a client that waits to send until you hit enter, though, as it makes it possible to fix type-o's before sending to the modem!)
 * This currently listens on port 5000 on all interfaces. If you're not behind CGNAT, this is a big risk!
 * It's also currently unauthenticated.
 * The connection is not encrypted.
@@ -27,6 +29,7 @@ If you're interested in supporting more work on things like this:
 
 ## Requirements
 
+* **RM520** modem. It will not work on RM50x yet (see above.)
 * ADB access to the modem
 
 ## Installation
