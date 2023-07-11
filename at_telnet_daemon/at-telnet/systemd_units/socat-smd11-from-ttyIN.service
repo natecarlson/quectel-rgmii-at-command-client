@@ -5,8 +5,6 @@ After=socat-smd11.service
 
 [Service]
 ExecStart=/bin/bash -c "/bin/cat /dev/ttyIN > /dev/smd11"
-# Add a delay to prevent the clients from starting too early
-ExecStartPre=/bin/sleep 2
 Restart=always
 RestartSec=1s
 StandardInput=tty-force
