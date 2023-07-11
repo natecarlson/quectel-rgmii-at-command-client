@@ -6,7 +6,7 @@ The downside is this does require ADB. But that documentation is covered on my m
 
 If you're interested in supporting more work on things like this:
 
-<a href="https://www.buymeacoffee.com/natecarlson" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+<a href="https://www.buymeacoffee.com/natecarlson" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a> <!-- markdownlint-disable-line -->
 
 ## Features
 
