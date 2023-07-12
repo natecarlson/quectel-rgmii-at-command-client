@@ -7,7 +7,7 @@ ExecStart=/usrdata/at-telnet/socat-armel-static -d -d pty,link=/dev/ttyIN,raw,ec
 # Add a delay to prevent the clients from starting too early
 ExecStartPost=/bin/sleep 2s
 Restart=always
-RestartSec=1
+RestartSec=1s
 
 [Install]
 WantedBy=multi-user.target
