@@ -14,6 +14,7 @@ StartLimitBurst=100
 
 [Service]
 ExecStart=/usrdata/at-telnet/modem-multiclient.py
+Nice=5
 Restart=always
 RestartSec=2s
 # Increased log rate limits, so we can see what's going on.
