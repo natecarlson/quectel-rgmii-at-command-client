@@ -7,6 +7,7 @@ import sys
 # Remove the home directory from sys.path.
 if "~/.micropython/lib" in sys.path:
     sys.path.remove("~/.micropython/lib")
+sys.path.append("/usrdata/micropython/lib")
 sys.path.append("/usrdata/micropython")
 
 import uos
@@ -26,6 +27,71 @@ global client_sockets, serialport
 client_sockets = []
 # We are referencing one of the two ports exposed by our socat command. The other one is /dev/ttyIN, and two running "cat" commands are keeping it sync'd with /dev/smd11.
 serialport = serial.Serial("/dev/ttyOUT", baudrate=115200)
+
+# These will be set in the main routine.
+global firewall_is_setup, fwpublicinterface, port
+firewall_is_setup = 0
+
+# Make these configurable via /etc/default or similar
+port = 5000
+fwpublicinterface = "rmnet+"
+
+# Block access to port 5000 via ipv4 and ipv6 on public-facing interfaces.
+def add_firewll_rules(port=port, fwpublicinterface=fwpublicinterface):
+    if not port or not fwpublicinterface:
+        logging.error(f"Port or fwpublicinterface not set. Values: fwpublicinterface: {fwpublicinterface} port: {port}")
+        exit(1)
+
+    logging.info(f"Adding firewall rules for port {port} on interface {fwpublicinterface}.")
+
+    # Check if the rule already exists in iptables
+    iptables_check_cmd = f"iptables -C INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT &> /dev/null"
+    iptables_check_result = uos.system(iptables_check_cmd)
+    if iptables_check_result != 0:
+        # Rule doesn't exist, add it to iptables
+        iptables_add_cmd = f"iptables -A INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT"
+        iptables_add_result = uos.system(iptables_add_cmd)
+        if iptables_add_result:
+            logging.error(f"ERROR: Failed to add iptables rule - input interface {fwpublicinterface} port {port}")
+            # Treat this as fatal.
+            sys.exit(1)
+        else:
+            logging.debug(f"Added iptables rule - input interface {fwpublicinterface} port {port}")
+
+    # Check if the rule already exists in ip6tables
+    ip6tables_check_cmd = f"ip6tables -C INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT &> /dev/null"
+    ip6tables_check_result = uos.system(ip6tables_check_cmd)
+    if ip6tables_check_result != 0:
+        # Rule doesn't exist, add it to ip6tables
+        ip6tables_add_cmd = f"ip6tables -A INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT"
+        ip6tables_add_result = uos.system(ip6tables_add_cmd)
+        if ip6tables_add_result:
+            logging.error(f"ERROR: Failed to add ip6tables rule - input interface {fwpublicinterface} port {port}")
+            # Treat this as fatal.
+            sys.exit(1)
+        else:
+            logging.debug(f"Added ip6tables rule - input interface {fwpublicinterface} port {port}")
+
+    global firewall_is_setup
+    firewall_is_setup = 1
+
+    logging.info(f"Successfully firewall rules for port {port} on interface {fwpublicinterface}.")
+
+
+def remove_firewall_rules(port=port, fwpublicinterface=fwpublicinterface):
+    if firewall_is_setup:
+        iptables_del_cmd = f"iptables -D INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT"
+        ip6tables_del_cmd = f"ip6tables -D INPUT -i {fwpublicinterface} -p tcp --dport {port} -j REJECT"
+        iptables_del_result = uos.system(iptables_del_cmd)
+        ip6tables_del_result = uos.system(ip6tables_del_cmd)
+
+        if iptables_del_result or ip6tables_del_result:
+            logging.error(f"ERROR: Failed to remove iptables or ip6tables rule - input interface {fwpublicinterface} port {port}")
+        else:
+            logging.info(f"Removed iptables and ip6tables rule - input interface {fwpublicinterface} port {port}")
+
+    else:
+        logging.info(f"Firewall rules not set up; not removing.")
 
 # This routine pulls data from the serial port and sends it to all connected clients.
 def handle_output():
@@ -50,10 +116,12 @@ def handle_output():
 def start_at_server(port):
 
     # Server initialization stuff
+    # NOTE: This now supports IPv6. And means that on many connections it'll be directly exposed
+    #       to the internet. So we're adding firewall rules to block access to it via rmnet+.
     try:
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
         server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        addr_info = socket.getaddrinfo("0.0.0.0", port)
+        addr_info = socket.getaddrinfo("::", port)
         addr = addr_info[0][4]
         server_socket.bind(addr)
         server_socket.listen(1)
@@ -73,7 +141,7 @@ def start_at_server(port):
             logging.warning(f"Did not get expected OK when running ATE0. Result: {str(out)}")
 
     except Exception as e:
-        logging.error("Error initializing server: {e}")
+        logging.error(f"Error initializing server: {e}")
         traceback.print_exc()
         raise
 
@@ -203,5 +271,11 @@ def start_at_server(port):
 
 # App startup. TODO: Make the port configurable.
 if __name__ == "__main__":
-    port = 5000
+    # Register an atexit handler to remove the firewall rules.
+    sys.atexit(remove_firewall_rules)
+
+    # Add the firewall rules before starting anything
+    add_firewll_rules(port=port, fwpublicinterface=fwpublicinterface)
+
+    # Light 'er up!
     start_at_server(port)

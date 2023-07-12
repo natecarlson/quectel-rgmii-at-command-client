@@ -19,7 +19,7 @@ If you're interested in supporting more work on things like this:
 
 * **This currently only works with RM520 modems!** My build environment targeted the library versions of the RM520; the other modems have an older environment. I'll rebuild on an older base version soonish.
 * If your telnet client sends each character individually (instead of waiting for you to press enter), this won't work properly. I'll get a patch in for it soonish. I've confirmed that with default settings putty, netcat, and NetKit telnet all work fine. (I'll always recommend using a client that waits to send until you hit enter, though, as it makes it possible to fix type-o's before sending to the modem!)
-* This currently listens on port 5000 on all interfaces. If you're not behind CGNAT, this is a big risk!
+* ~~This currently listens on port 5000 on all interfaces. If you're not behind CGNAT, this is a big risk!~~ It now listens on both IPv4 and IPv6, but sets up a firewall rule to prevent external access. If your public input interface is something under than rmnet+, it will not work, however.
 * It's also currently unauthenticated.
 * The connection is not encrypted.
 * The socat binary is from a different source. I will add a public build for it at some point, which will alleviate risk. For now, I haven't seen anything suspicious about it.
